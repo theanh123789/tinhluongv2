@@ -16,8 +16,6 @@
     h4 {
       font-weight: bold;
     }
-
-    /* Overlay che toàn màn hình */
     #overlay {
       position: fixed;
       top: 0; left: 0;
@@ -48,7 +46,6 @@
     #overlay button:hover {
       background: #1e88e5;
     }
-
     .highlight {
       font-size: 20px;
       font-weight: bold;
@@ -99,7 +96,12 @@
 
     <div class="input-field">
       <input type="number" id="tangCaCN">
-      <label for="tangCaCN">Số ngày tăng ca Chủ nhật</label>
+      <label for="tangCaCN">Số ngày tăng ca CN (ca ngày)</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="tangCaCNDem">
+      <label for="tangCaCNDem">Số ngày tăng ca CN (ca đêm)</label>
     </div>
 
     <div class="input-field">
@@ -144,23 +146,25 @@
       let tangCaNgay = +document.getElementById("tangCaNgay").value || 0;
       let tangCaDem = +document.getElementById("tangCaDem").value || 0;
       let tangCaCN = +document.getElementById("tangCaCN").value || 0;
+      let tangCaCNDem = +document.getElementById("tangCaCNDem").value || 0;
       let ngayCaDemPhuCap = +document.getElementById("ngayCaDemPhuCap").value || 0;
 
       let tongCong = ngayCaNgay + ngayCaDem + cnCaNgay + cnCaDem;
       let luongCoBanAll = tongCong * luongCoBan;
 
       let tienTangCaNgay = tangCaNgay * gioTangCa * tienGio * 1.5;
-      let tienTangCaDem = tangCaDem * gioTangCa * tienGio * 2;
-      let tienTangCaCN = tangCaCN * gioTangCa * tienGio * 3;
+      let tienTangCaDem = tangCaDem * gioTangCa * tienGio * 2.0;
+      let tienTangCaCN = tangCaCN * gioTangCa * tienGio * 2.0;
+      let tienTangCaCNDem = tangCaCNDem * gioTangCa * tienGio * 2.7;
 
-      let phuCap = ngayCaDemPhuCap * 20000;
+      let phuCap = ngayCaDemPhuCap * 40000;
 
       let troCap = 0;
       if (tongCong >= 25) {
         troCap = 500000 + 400000 + 350000;
       }
 
-      let tongLuong = luongCoBanAll + tienTangCaNgay + tienTangCaDem + tienTangCaCN + phuCap + troCap;
+      let tongLuong = luongCoBanAll + tienTangCaNgay + tienTangCaDem + tienTangCaCN + tienTangCaCNDem + phuCap + troCap;
 
       // Thông điệp
       let thongDiep = "";
@@ -178,7 +182,8 @@
             <p><b>Lương cơ bản:</b> ${luongCoBanAll.toLocaleString()} VND</p>
             <p><b>Tiền tăng ca ngày:</b> ${tienTangCaNgay.toLocaleString()} VND</p>
             <p><b>Tiền tăng ca đêm:</b> ${tienTangCaDem.toLocaleString()} VND</p>
-            <p><b>Tiền tăng ca CN:</b> ${tienTangCaCN.toLocaleString()} VND</p>
+            <p><b>Tiền tăng ca CN (ngày):</b> ${tienTangCaCN.toLocaleString()} VND</p>
+            <p><b>Tiền tăng ca CN (đêm):</b> ${tienTangCaCNDem.toLocaleString()} VND</p>
             <p><b>Phụ cấp cơm:</b> ${phuCap.toLocaleString()} VND</p>
             <p><b>Trợ cấp (${tongCong >= 25 ? "Đủ công" : "Không đủ công"}):</b> ${troCap.toLocaleString()} VND</p>
             <h5><b>Tổng lương:</b> ${tongLuong.toLocaleString()} VND</h5>
