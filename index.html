@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Máy tính lương</title>
+  <link rel="shortcut icon" href="image.png">
+  <!-- Google MaterializeCSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    }
+    .container {
+      margin-top: 30px;
+    }
+    h4 {
+      font-weight: bold;
+    }
+
+    /* Overlay che toàn màn hình */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+    #overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #overlay button {
+      font-size: 22px;
+      padding: 20px 40px;
+      border-radius: 12px;
+      background: #42a5f5;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.2s;
+    }
+    #overlay button:hover {
+      background: #1e88e5;
+    }
+
+    .highlight {
+      font-size: 20px;
+      font-weight: bold;
+      color: red;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body class="grey lighten-4">
+
+  <!-- Overlay click bắt buộc -->
+  <div id="overlay">
+    <button onclick="batNhac()">Click vào đây :))</button>
+  </div>
+
+  <div class="container">
+    <h4 class="center-align blue-text">Thế Anh đây :))) </h4>
+
+    <div class="input-field">
+      <input type="number" id="ngayCaNgay">
+      <label for="ngayCaNgay">Số ngày làm ca ngày</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="ngayCaDem">
+      <label for="ngayCaDem">Số ngày làm ca đêm</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="cnCaNgay">
+      <label for="cnCaNgay">Số ngày làm ca ngày Chủ nhật</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="cnCaDem">
+      <label for="cnCaDem">Số ngày làm ca đêm Chủ nhật</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="tangCaNgay">
+      <label for="tangCaNgay">Số ngày tăng ca ngày</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="tangCaDem">
+      <label for="tangCaDem">Số ngày tăng ca đêm</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="tangCaCN">
+      <label for="tangCaCN">Số ngày tăng ca Chủ nhật</label>
+    </div>
+
+    <div class="input-field">
+      <input type="number" id="ngayCaDemPhuCap">
+      <label for="ngayCaDemPhuCap">Số ngày làm ca đêm (tính tiền cơm)</label>
+    </div>
+
+    <button class="btn waves-effect waves-light blue darken-2" onclick="tinhLuong()">Tính lương</button>
+
+    <div id="ketqua" class="card-panel yellow lighten-4 black-text" style="margin-top:20px; display:none;"></div>
+  </div>
+
+  <!-- Nhạc nền -->
+  <audio id="nhacNen" loop>
+    <source src="amnhac.mp3" type="audio/mpeg">
+    Trình duyệt không hỗ trợ phát nhạc.
+  </audio>
+
+  <script>
+    function batNhac() {
+      const overlay = document.getElementById("overlay");
+      const audio = document.getElementById("nhacNen");
+
+      audio.volume = 0.4;
+      audio.play();
+
+      overlay.classList.add("fade-out");
+      setTimeout(() => {
+        overlay.style.display = "none";
+      }, 1000);
+    }
+
+    function tinhLuong() {
+      const luongCoBan = 211538; // lương 1 ngày
+      const gioTangCa = 3;       // mỗi ngày tăng ca 3 tiếng
+      const tienGio = luongCoBan / 8; // 1 ngày làm 8 tiếng
+
+      let ngayCaNgay = +document.getElementById("ngayCaNgay").value || 0;
+      let ngayCaDem = +document.getElementById("ngayCaDem").value || 0;
+      let cnCaNgay = +document.getElementById("cnCaNgay").value || 0;
+      let cnCaDem = +document.getElementById("cnCaDem").value || 0;
+      let tangCaNgay = +document.getElementById("tangCaNgay").value || 0;
+      let tangCaDem = +document.getElementById("tangCaDem").value || 0;
+      let tangCaCN = +document.getElementById("tangCaCN").value || 0;
+      let ngayCaDemPhuCap = +document.getElementById("ngayCaDemPhuCap").value || 0;
+
+      let tongCong = ngayCaNgay + ngayCaDem + cnCaNgay + cnCaDem;
+      let luongCoBanAll = tongCong * luongCoBan;
+
+      let tienTangCaNgay = tangCaNgay * gioTangCa * tienGio * 1.5;
+      let tienTangCaDem = tangCaDem * gioTangCa * tienGio * 2;
+      let tienTangCaCN = tangCaCN * gioTangCa * tienGio * 3;
+
+      let phuCap = ngayCaDemPhuCap * 20000;
+
+      let troCap = 0;
+      if (tongCong >= 25) {
+        troCap = 500000 + 400000 + 350000;
+      }
+
+      let tongLuong = luongCoBanAll + tienTangCaNgay + tienTangCaDem + tienTangCaCN + phuCap + troCap;
+
+      // Thông điệp
+      let thongDiep = "";
+      if (tongLuong >= 9000000) {
+        thongDiep = "Bạn giàu vcl bạn nên bao cả chuyền đi uống bia 🐷";
+      } else {
+        thongDiep = "Nghèo thế còn bày đặt tính công :)))";
+      }
+
+      document.getElementById("ketqua").style.display = "block";
+      document.getElementById("ketqua").innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <h5>Kết quả:</h5>
+            <p><b>Lương cơ bản:</b> ${luongCoBanAll.toLocaleString()} VND</p>
+            <p><b>Tiền tăng ca ngày:</b> ${tienTangCaNgay.toLocaleString()} VND</p>
+            <p><b>Tiền tăng ca đêm:</b> ${tienTangCaDem.toLocaleString()} VND</p>
+            <p><b>Tiền tăng ca CN:</b> ${tienTangCaCN.toLocaleString()} VND</p>
+            <p><b>Phụ cấp cơm:</b> ${phuCap.toLocaleString()} VND</p>
+            <p><b>Trợ cấp (${tongCong >= 25 ? "Đủ công" : "Không đủ công"}):</b> ${troCap.toLocaleString()} VND</p>
+            <h5><b>Tổng lương:</b> ${tongLuong.toLocaleString()} VND</h5>
+            <p class="highlight">${thongDiep}</p>
+          </div>
+          <div>
+            <img src="hehe.jpg" alt="ảnh vui" style="max-width:500px; border-radius:12px;">
+          </div>
+        </div>
+      `;
+    }
+  </script>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
